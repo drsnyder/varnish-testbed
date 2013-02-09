@@ -1,6 +1,9 @@
+#!/usr/bin/env ruby -rubygems
+# ruby -rubygems backend-server.rb  -p 8089 
 require 'sinatra'
 
-PAYLOAD_SIZE=15*2**10
+PAYLOAD_SIZE=(2**10)
+
 def rchr
     (97 + rand(27)).chr
 end
@@ -15,20 +18,21 @@ def emit_body(text)
         "</body></html>\n"
 end
 
-get '/' do
+get '/pages/:unique' do
     status 200
-    emit_body(generate_random_block(PAYLOAD_SIZE) + "\n" +  \
-    "<esi:include src=\"/esi\" />\n" + \
-    "<esi:include src=\"/esi\" />\n" + \
-    "<esi:include src=\"/esi\" />\n" + \
-    generate_random_block(PAYLOAD_SIZE))
-    
+    emit_body(
+        generate_random_block(10*PAYLOAD_SIZE) + "\n" +  \
+        "<esi:include src=\"/modules/esi\" />\n" + \
+        "<esi:include src=\"/modules/esi\" />\n" + \
+        "<esi:include src=\"/modules/esi\" />\n" + \
+        generate_random_block(10*PAYLOAD_SIZE) + 
+        "\n--- #{params[:unique]} ---\n")
 
 end
 
-get '/esi' do
+get '/modules/esi' do
     status 200
     headers "Cache-Control" => "s-maxage=0"
-    body generate_random_block(2**10)
+    body generate_random_block(PAYLOAD_SIZE)
 end
 

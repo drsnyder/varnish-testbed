@@ -1,3 +1,4 @@
 #!/bin/bash
 . varnish-config
-kill -TERM $VARNISHD_PID
+echo `cat $VARNISHD_PID`
+kill -TERM `cat $VARNISHD_PID`
