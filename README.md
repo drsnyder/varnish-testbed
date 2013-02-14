@@ -38,7 +38,7 @@ are inculded in high-traffic pages that are cached. To simulate this, you can re
 
 # LICENCE
 
-Copyright (C) 2013 Damon Snyder (damon@huddler-inc.com) Snyder 
+Copyright (C) 2013 Damon Snyder 
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this
 software and associated documentation files (the "Software"), to deal in the Software
