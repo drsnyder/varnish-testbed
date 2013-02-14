@@ -31,6 +31,8 @@ get '/pages/:unique' do
 end
 
 get '/modules/esi' do
+    # simulate a slow backend
+    sleep(rand(0.3))
     status 200
     headers "Cache-Control" => "s-maxage=0"
     body generate_random_block(PAYLOAD_SIZE)

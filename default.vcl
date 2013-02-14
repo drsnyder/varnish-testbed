@@ -1,9 +1,27 @@
-backend default {
+backend pair1 {
     .host = "127.0.0.1";
     .port = "8089";
 }
 
+backend pair2 {
+    .host = "127.0.0.1";
+    .port = "8090";
+}
+
+director default random {
+    {
+        .backend = pair1;
+        .weight = 1;
+    }
+    {
+        .backend = pair2;
+        .weight = 1;
+    }
+}
+
 sub vcl_recv {
+    set req.backend = default;
+
     if (req.restarts == 0) {
         if (req.http.x-forwarded-for) {
             set req.http.X-Forwarded-For =
@@ -64,12 +82,19 @@ sub vcl_miss {
 
 sub vcl_fetch {
     esi;
+
     if (!beresp.cacheable) {
         return (pass);
     }
     if (beresp.http.Set-Cookie) {
         return (pass);
     }
+
+    # added to prevent high csw/s when esi modules set s-maxage=0
+    if (beresp.http.Cache-Control ~ "s-maxage=0") {
+        return (pass);
+    }
+
     return (deliver);
 }
 
